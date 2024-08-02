@@ -1,28 +1,29 @@
 --Q2
 create table FACILITY(
-    FACILITY_NO VARCHAR2(10) primary key,
-    POLICE_NO NVARCHAR2(10),
-    VILLIAGE_NO NVARCHAR2(10),
-    TOWNSHIP NVARCHAR2(10),
-    ADDRESS NVARCHAR2(50),
-    POPULATION NUMBER,
-    UNDER_FLOOR NUMBER,
-    FACILITY_TYPE NVARCHAR2(10));
-
+  FACILITY_NO varchar2(10) primary key, 
+  POLICE_NO nvarchar2(10), 
+  VILLIAGE_NO nvarchar2(10), 
+  TOWNSHIP nvarchar2(10), 
+  ADDRESS nvarchar2(50), 
+  POPULATION number, 
+  UNDER_FLOOR number, 
+  FACILITY_TYPE nvarchar2(10)
+);
 create table VILLIAGE(
-    VILLIAGE_NO VARCHAR2(10) primary key,
-    TOWNSHIP NVARCHAR2(10),
-    VILLIAGE_NAME NVARCHAR2(10),
-    ADDRESS NVARCHAR2(50),
-    TEL VARCHAR2(20));
-
+  VILLIAGE_NO varchar2(10) primary key, 
+  TOWNSHIP nvarchar2(10), 
+  VILLIAGE_NAME nvarchar2(10), 
+  ADDRESS nvarchar2(50), 
+  TEL varchar2(20)
+);
 create table POLICE(
-    POLICE_NO VARCHAR2(10) primary key,
-    STATION NVARCHAR2(10),
-    ADDRESS NVARCHAR2(50),
-    TEL VARCHAR2(20));
-
+  POLICE_NO varchar2(10) primary key, 
+  STATION nvarchar2(10), 
+  ADDRESS nvarchar2(50), 
+  TEL varchar2(20)
+);
 commit;
+
 --Q3
 insert into FACILITY
 values('F001','M001','C001','竹南鎮','中埔街20號',100,1,'公寓');
@@ -79,71 +80,79 @@ commit;
 --Q4
 ---Q4-1
 select 
-    P.STATION as 轄管分局, 
-    P.TEL as 分局連絡電話
-from POLICE P
-right join FACILITY F
-on P.POLICE_NO = F.POLICE_NO
-where F.POPULATION > 1000;
+  distinct P.STATION as 轄管分局, 
+  P.TEL as 分局連絡電話 
+ from 
+  FACILITY F 
+  left join POLICE P on F.POLICE_NO = P.POLICE_NO
+where 
+  F.POPULATION > 1000;
 
 ---Q4-2
 select 
-    P.STATION as 轄管分局, 
-    P.TEL as 分局連絡電話, 
-    count(distinct(F.FACILITY_NO)) as 避難設施數量
-from POLICE P
-right join FACILITY F
-on P.POLICE_NO = F.POLICE_NO
-where F.POPULATION > 1000
-group by P.STATION, P.TEL;
+  P.STATION as 轄管分局, 
+  P.TEL as 分局連絡電話, 
+  count(F.FACILITY_NO) over (partition by P.STATION) as 避難設施數量 
+ from 
+  FACILITY F   
+  left join POLICE P  on P.POLICE_NO = F.POLICE_NO 
+where 
+  F.POPULATION > 1000 
+
 
 ---Q4-3
 select
-    P.STATION as 轄管分局, 
-    P.TEL as 分局連絡電話, 
-    count(distinct(F.FACILITY_NO)) as 避難設施數量,
-    concat(F.TOWNSHIP, F.ADDRESS) as 避難設施地址, 
-    F.FACILITY_TYPE as 類型
-from POLICE P
-right join FACILITY F
-on P.POLICE_NO = F.POLICE_NO
-where F.POPULATION > 1000
-group by P.STATION, P.TEL, concat(F.TOWNSHIP, F.ADDRESS), F.FACILITY_TYPE;
+  P.STATION as 轄管分局, 
+  P.TEL as 分局連絡電話, 
+  count(F.FACILITY_NO) over (partition by P.STATION) as 避難設施數量, 
+  concat(F.TOWNSHIP, F.ADDRESS) as 避難設施地址, 
+  F.FACILITY_TYPE as 類型 
+ from
+    FACILITY F
+    left join POLICE P on P.POLICE_NO = F.POLICE_NO 
+where 
+  F.POPULATION > 1000
 
 ---Q4-4
-select
-    V.VILLIAGE_NAME as 村里別, 
-    F.ADDRESS as 避難設施地址, 
-    F.POPULATION as 容人數量, 
-    P.STATION as 轄管分局,
-    P.TEL as 分局連絡電話
-from FACILITY F
-left join VILLIAGE V
-on F.VILLIAGE_NO = V.VILLIAGE_NO
-left join POLICE P
-on F.POLICE_NO = P.POLICE_NO
-where F.ADDRESS like '%中%';
+select 
+  V.VILLIAGE_NAME as 村里別, 
+  F.ADDRESS as 避難設施地址, 
+  F.POPULATION as 容人數量, 
+  P.STATION as 轄管分局, 
+  P.TEL as 分局連絡電話 
+ from 
+  FACILITY F 
+  left join VILLIAGE V on F.VILLIAGE_NO = V.VILLIAGE_NO 
+  left join POLICE P on F.POLICE_NO = P.POLICE_NO 
+where 
+  F.ADDRESS like '%中%';
 
 ---Q4-5
-select
-    V.VILLIAGE_NAME as 村里別,
-    concat(V.TOWNSHIP, V.ADDRESS) as 村里辦公室位置,
-    F.ADDRESS as 避難設施地址,
-    F.POPULATION as 容人數量
-from FACILITY F
-left join VILLIAGE V
-on F.VILLIAGE_NO = V.VILLIAGE_NO
-where F.FACILITY_TYPE in ('公寓', '大樓');
+select 
+  V.VILLIAGE_NAME as 村里別, 
+  concat(V.TOWNSHIP, V.ADDRESS) as 村里辦公室位置, 
+  F.ADDRESS as 避難設施地址, 
+  F.POPULATION as 容人數量 
+ from 
+  FACILITY F 
+  left join VILLIAGE V on F.VILLIAGE_NO = V.VILLIAGE_NO 
+where 
+  F.FACILITY_TYPE in ('公寓', '大樓');
 
 
 --Q5
 ---Q5-1
-update FACILITY
-set POPULATION = 5000
-where '苗栗縣' || TOWNSHIP || ADDRESS = '苗栗縣竹南鎮和平街79號';
+update 
+  FACILITY 
+set 
+  POPULATION = 5000 
+where 
+  '苗栗縣' || TOWNSHIP || ADDRESS = '苗栗縣竹南鎮和平街79號';
 commit;
 
-
 ---Q5-2
-delete from FACILITY where POPULATION < 1000;
+delete from 
+  FACILITY 
+where 
+  POPULATION < 1000;
 commit;
