@@ -85,7 +85,7 @@ select
  from 
   FACILITY F 
   left join POLICE P on F.POLICE_NO = P.POLICE_NO
-where 
+ where 
   F.POPULATION > 1000;
 
 ---Q4-2
@@ -96,7 +96,7 @@ select
  from 
   FACILITY F   
   left join POLICE P  on P.POLICE_NO = F.POLICE_NO 
-where 
+ where
   F.POPULATION > 1000 
 
 
@@ -107,7 +107,7 @@ select
   count(F.FACILITY_NO) over (partition by P.STATION) as 避難設施數量, 
   concat(F.TOWNSHIP, F.ADDRESS) as 避難設施地址, 
   F.FACILITY_TYPE as 類型 
- from
+from
     FACILITY F
     left join POLICE P on P.POLICE_NO = F.POLICE_NO 
 where 
@@ -124,7 +124,7 @@ select
   FACILITY F 
   left join VILLIAGE V on F.VILLIAGE_NO = V.VILLIAGE_NO 
   left join POLICE P on F.POLICE_NO = P.POLICE_NO 
-where 
+ where 
   F.ADDRESS like '%中%';
 
 ---Q4-5
@@ -136,7 +136,7 @@ select
  from 
   FACILITY F 
   left join VILLIAGE V on F.VILLIAGE_NO = V.VILLIAGE_NO 
-where 
+ where 
   F.FACILITY_TYPE in ('公寓', '大樓');
 
 
@@ -144,15 +144,15 @@ where
 ---Q5-1
 update 
   FACILITY 
-set 
+ set 
   POPULATION = 5000 
-where 
+ where 
   '苗栗縣' || TOWNSHIP || ADDRESS = '苗栗縣竹南鎮和平街79號';
 commit;
 
 ---Q5-2
 delete from 
   FACILITY 
-where 
+ where 
   POPULATION < 1000;
 commit;
