@@ -19,11 +19,13 @@ public class HRMain {
 		}
 
 		// 第四題
-		try (BufferedWriter bWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("C:\\Users\\Admin\\Desktop\\Java班\\Java\\output.csv"), "UTF-8"))) {
+		try (BufferedWriter bWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("C:\\Users\\Admin\\Desktop\\Java班\\git_upload\\Java\\output.csv"), "UTF-8"))) {
 			bWriter.write("\ufeff");
+			StringBuilder sb = new StringBuilder();
 			for (Employee employee : employeeList) {
-				bWriter.write(employee.getName() + "," + employee.getPayment() + "\n");
-
+				sb.append(employee.getName()).append(",").append(employee.getPayment()).append("\n");
+				bWriter.write(sb.toString());
+				sb.setLength(0);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
