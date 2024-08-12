@@ -10,6 +10,12 @@ public class Calendar {
 		try (Scanner input = new Scanner(System.in)) {
 			System.out.print("輸入介於1-12間的整數m:");
 			int month = input.nextInt();
+			Boolean ifMonthInRange = month >=1 && month <= 12;
+			while (ifMonthInRange == false) {
+				System.out.println("月份輸入錯誤，請重新輸入:");
+				month = input.nextInt();
+				ifMonthInRange = month >=1 && month <= 12;
+			}
 			display(month);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -33,7 +39,7 @@ public class Calendar {
 		YearMonth yearMonth = YearMonth.of(2024, month);
 		for (int i = 1; i <= yearMonth.getMonth().length(yearMonth.isLeapYear()); i++, count++) {
 			System.out.printf("%3d", i);
-			if ((count % 7 == 0) || (count % 7 != 0 && i == yearMonth.getMonth().length(yearMonth.isLeapYear()))) {
+			if ((count % 7 == 0) || (i == yearMonth.getMonth().length(yearMonth.isLeapYear()))) {
 				System.out.println();
 			}
 		}

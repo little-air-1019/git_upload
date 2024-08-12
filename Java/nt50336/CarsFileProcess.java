@@ -6,9 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.math.BigDecimal;
-import java.security.KeyStore.Entry;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -46,13 +44,13 @@ public class CarsFileProcess {
 				}
 
 			});
-
+			
+			StringBuilder sb = new StringBuilder();
 			try (BufferedWriter bWriter = new BufferedWriter(new OutputStreamWriter(
 					new FileOutputStream("C:\\Users\\Admin\\Desktop\\Java班\\git_upload\\Java\\cars2.csv"), "UTF-8"))) {
 				bWriter.write("\ufeff");
 				bWriter.write("Manufacturer,Type,Min.Price,Price\n");
-				
-				StringBuilder sb = new StringBuilder();
+								
 				for (Map<String, String> car : Cars) {
 					sb.append(car.get("Manufacturer")).append(",").append(car.get("Type")).append(",")
 							.append(car.get("Min.Price")).append(",").append(car.get("Price")).append("\n");
@@ -70,7 +68,6 @@ public class CarsFileProcess {
 			BigDecimal totalMinPrice = BigDecimal.ZERO;
 			BigDecimal totalPrice = BigDecimal.ZERO;
 			
-			StringBuilder sb = new StringBuilder();
 			for (Map.Entry<String, List<Map<String, String>>> carsGroup : carsGroupMap.entrySet()) {
 				List<Map<String, String>> carList = carsGroup.getValue();
 				BigDecimal sumMinPrice = BigDecimal.ZERO;
@@ -93,7 +90,7 @@ public class CarsFileProcess {
 				totalMinPrice = totalMinPrice.add(sumMinPrice);
 				totalPrice = totalPrice.add(sumPrice);
 			}
-			sb.append(String.format("%-22s", "合計")).append(String.format("%-8s", totalMinPrice.toPlainString()))
+			sb.append(String.format("%-22s", "合計")).append(String.format("%-8s", totalMinPrice.toPlainString())) // 不用 toString 原因(科學符號有加減等)
 					.append(totalPrice.toPlainString());
 			System.out.println(sb.toString());
 			sb.setLength(0);
