@@ -22,8 +22,8 @@ public class DatabaseProcess {
 //		 getAllCars();
 
 		System.out.println("請選擇以下指令輸入：select、insert、update、delete\n");
-		Scanner scanner = new Scanner(System.in);
-		String command = scanner.next();
+		Scanner scanner = new Scanner(System.in);				
+		String command = scanner.next().toLowerCase();
 		switch (command) {
 		case "select": {
 			System.out.print("請輸入製造商：");
@@ -39,7 +39,7 @@ public class DatabaseProcess {
 			insertMap.put("MANUFACTURER", scanner.next());
 			System.out.print("請輸入類別：");
 			insertMap.put("TYPE", scanner.next());
-			if (query(insertMap.get("MANUFACTURER"), insertMap.get("TYPE")) == true) {
+			if (!query(insertMap.get("MANUFACTURER"), insertMap.get("TYPE")).isEmpty()) {
 				System.out.println("資料已存在");
 				break;
 			}
@@ -57,14 +57,26 @@ public class DatabaseProcess {
 			updateMap.put("MANUFACTURER", scanner.next());
 			System.out.print("請輸入類別：");
 			updateMap.put("TYPE", scanner.next());
-			if (query(updateMap.get("MANUFACTURER"), updateMap.get("TYPE")) == true) {
+			List<Map<String, String>> queryResult = query(updateMap.get("MANUFACTURER"), updateMap.get("TYPE"));
+			if (queryResult.isEmpty()) {
 				System.out.println("資料不存在，請先新增");
 				break;
 			}
+			scanner.nextLine();
 			System.out.print("請輸入底價：");
-			updateMap.put("MIN_PRICE", scanner.next());
+			String minPriceInput = scanner.nextLine().trim();
+			if (minPriceInput.isBlank()) {
+				updateMap.put("MIN_PRICE", queryResult.get(0).get("MIN_PRICE"));
+			} else {
+				updateMap.put("MIN_PRICE", minPriceInput);
+			}
 			System.out.print("請輸入售價：");
-			updateMap.put("PRICE", scanner.next());
+			String priceInput = scanner.nextLine().trim();
+			if (priceInput.isBlank()) {
+				updateMap.put("PRICE", queryResult.get(0).get("PRICE"));
+			} else {
+				updateMap.put("PRICE", priceInput);
+			}
 			update(updateMap);
 			break;
 		}
@@ -74,7 +86,7 @@ public class DatabaseProcess {
 			String manufacturer = scanner.next();
 			System.out.print("請輸入類別：");
 			String type = scanner.next();
-			if (query(manufacturer, type) == false) {
+			if (query(manufacturer, type).isEmpty()) {
 				System.out.println("資料不存在，無法刪除");
 				break;
 			}
@@ -113,7 +125,7 @@ public class DatabaseProcess {
 		}
 	}
 
-	private static boolean query(String manufacturer, String type) {
+	private static List<Map<String, String>> query(String manufacturer, String type) {
 		try (Connection connection = DriverManager.getConnection(CONNECTION_URL, USER_NAME, PASSWORD);
 				PreparedStatement pstmt = connection
 						.prepareStatement("select * from STUDENT.CARS where MANUFACTURER = ? and TYPE = ?")) {
@@ -133,12 +145,10 @@ public class DatabaseProcess {
 					carsList.add(car);
 				}
 
-				if (carsList.isEmpty()) {
-					return false;
-				} else {
-					printCarsList(carsList);
-					return true;
-				}
+
+				printCarsList(carsList);
+				return carsList;
+
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -147,7 +157,7 @@ public class DatabaseProcess {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return false;
+		return List.of();
 	}
 
 	private static void printCarsList(List<Map<String, String>> carsList) {

@@ -1,6 +1,7 @@
 package com.cathaybk.practice.nt50336;
 
 import java.time.LocalDate;
+import java.time.Year;
 import java.time.YearMonth;
 import java.util.Scanner;
 
@@ -23,7 +24,8 @@ public class Calendar {
 	}
 
 	public static void display(int month) {
-		System.out.printf("      2024年%d月       \n", month);
+		int year = Year.now().getValue();
+		System.out.printf("      %4s年%d月       \n", year, month);
 		System.out.println("---------------------");
 		System.out.println("日  一  二  三  四  五  六 ");
 		System.out.println("=====================");
@@ -36,7 +38,7 @@ public class Calendar {
 			}
 		}
 
-		YearMonth yearMonth = YearMonth.of(2024, month);
+		YearMonth yearMonth = YearMonth.of(year, month);
 		for (int i = 1; i <= yearMonth.getMonth().length(yearMonth.isLeapYear()); i++, count++) {
 			System.out.printf("%3d", i);
 			if ((count % 7 == 0) || (i == yearMonth.getMonth().length(yearMonth.isLeapYear()))) {
