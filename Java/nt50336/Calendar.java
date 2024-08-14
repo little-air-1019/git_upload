@@ -41,7 +41,7 @@ public class Calendar {
 		YearMonth yearMonth = YearMonth.of(year, month);
 		for (int i = 1; i <= yearMonth.getMonth().length(yearMonth.isLeapYear()); i++, count++) {
 			System.out.printf("%3d", i);
-			if ((count % 7 == 0) || (i == yearMonth.getMonth().length(yearMonth.isLeapYear()))) {
+			if (count % 7 == 0 || i == yearMonth.getMonth().length(yearMonth.isLeapYear())) {
 				System.out.println();
 			}
 		}
