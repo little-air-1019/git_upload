@@ -75,11 +75,8 @@
                 if (selected_radio === null) {
                     alert('請選擇資料列');
                     return;
-                } else if (manufacturer === '' || type === '') {
+                } else if (!manufacturer.trim() || !type.trim()) {
                     alert('製造商及類別不可為空白');
-                    return;
-                } else if (checkExist(manufacturer, type)) {
-                    alert('已有同製造商及類別之資料');
                     return;
                 };
 
