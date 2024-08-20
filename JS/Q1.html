@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第一題</title>
+
+    <script type="text/javascript" src="HashMap.js"></script>
+    <script>
+        window.onload = function() {
+            const map = new HashMap();
+            const result = document.getElementById('txt_result');
+            document.getElementById('btn_put').onclick = function() {
+                let key = document.getElementById('txtbox_key').value;
+                let value = document.getElementById('txtbox_value').value;
+                let result_str = '';
+                if (key === '') {
+                    alert('KEY值不可空白');
+                    return;
+                } else if (map.contains(key)) {
+                    alert('KEY值不可重複');
+                    return;
+                };
+                map.put(key, value);
+
+                for (let key of map.keys()) {
+                    result_str += key + '：' + map.get(key) + '<br>';
+                };
+                result.innerHTML = result_str;
+                result.hidden = false;
+            };
+
+            document.getElementById('btn_clear').onclick = function() {
+                document.getElementById('txtbox_key').value = '';
+                document.getElementById('txtbox_value').value = '';
+                result.hidden = true;
+            };
+        };
+    </script>
+    <style>
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-top: 20px;
+            margin-left: 20px;
+        }
+        .input-group {
+            display: flex;
+            align-items: left;
+            margin-bottom: 10px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        .input-group label {
+            width: 60px;
+            font-weight: bold;
+        }
+        .button-group {
+            display: flex;
+            gap: 30px;
+            padding: 8px;
+        }
+        .button {
+            padding: 3px 10px;
+        }
+        .txt_result {
+            margin-top: 5px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        .txt {
+            margin-left: 20px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="input-group">
+            <label for="txtbox_key">KEY</label>
+            <input type="text" id="txtbox_key">
+        </div>
+        <div class="input-group">
+            <label for="txtbox_value">VALUE</label>
+            <input type="text" id="txtbox_value">
+        </div>
+        <hr class="solid" style="width: 250px; margin-left: 0;">
+        <div class="button-group">
+            <button class="button" type="button" id="btn_put">PUT</button>
+            <button class="button" type="button" id="btn_clear">CLEAR</button>
+        </div>
+        <hr class="solid" style="width: 250px; margin-left: 0;">
+        <div class="txt_result">
+            【RESULT】
+            <p class="txt" id="txt_result"></p>
+        </div>
+    </div>
+</body>
+</html>

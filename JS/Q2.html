@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第二題</title>
+    
+    <script>
+        window.onload = function() {
+            
+            document.getElementById('btn_insert').onclick = function() {
+                const manufacturer = document.getElementById('txtbox_manufacturer').value;
+                const type = document.getElementById('txtbox_type').value;
+                const minPrice = document.getElementById('txtbox_minPrice').value;
+                const price = document.getElementById('txtbox_price').value;
+                if (manufacturer === '' || type === '') {
+                    alert('製造商、類別不可空白');
+                    return;
+                } else if (checkExist(manufacturer, type)) {
+                    alert('已有同製造商及類別之資料');
+                    return;
+                };
+
+                let table_2 = document.getElementById('table_2');
+                let tbody = table_2.getElementsByTagName('tbody')[0];
+                if (!tbody) {
+                    tbody = document.createElement('tbody');
+                    table_2.appendChild(tbody);
+                };
+                let newRow = table_2.insertRow();
+
+                let cell0 = newRow.insertCell(0);
+                let cell1 = newRow.insertCell(1);
+                let cell2 = newRow.insertCell(2);
+                let cell3 = newRow.insertCell(3);
+                let cell4 = newRow.insertCell(4);
+                let cell5 = newRow.insertCell(5);
+                let cell6 = newRow.insertCell(6);
+
+                // 選擇欄位
+                let selectRadio = document.createElement('input');
+                selectRadio.type = 'radio';
+                selectRadio.name = 'select_row';
+                selectRadio.onclick = function() {
+                    showInfo(this);
+                };
+                cell0.appendChild(selectRadio);
+
+                cell1.innerHTML = table_2.rows.length - 1;
+                cell2.innerHTML = manufacturer;
+                cell3.innerHTML = type;
+                cell4.innerHTML = minPrice;
+                cell5.innerHTML = price;
+
+                // 刪除鍵
+                let deleteButton = document.createElement('button');
+                deleteButton.type = 'button';
+                deleteButton.textContent = '刪除';
+                deleteButton.onclick = function() {
+                    deleteRow(this);
+                    refreshSerial();
+                };
+                cell6.appendChild(deleteButton);
+
+                clearInput();
+                for (let i = 1; i < table_2.rows.length; i++) {
+                    table_2.rows[i].style.display = '';
+                };
+            };
+            
+            document.getElementById('btn_update').onclick = function() {
+                const manufacturer = document.getElementById('txtbox_manufacturer').value;
+                const type = document.getElementById('txtbox_type').value;
+                let selected_radio = document.querySelector('input[name="select_row"]:checked');
+                if (selected_radio === null) {
+                    alert('請選擇資料列');
+                    return;
+                } else if (manufacturer === '' || type === '') {
+                    alert('製造商及類別不可為空白');
+                    return;
+                } else if (checkExist(manufacturer, type)) {
+                    alert('已有同製造商及類別之資料');
+                    return;
+                };
+
+                let row = selected_radio.parentNode.parentNode;
+                row.cells[2].innerHTML = document.getElementById('txtbox_manufacturer').value;
+                row.cells[3].innerHTML = document.getElementById('txtbox_type').value;
+                row.cells[4].innerHTML = document.getElementById('txtbox_minPrice').value;
+                row.cells[5].innerHTML = document.getElementById('txtbox_price').value;
+            };
+            
+            document.getElementById('btn_clear').onclick = function() {
+                clearInput();
+                let table_2 = document.getElementById('table_2');
+                for (let i = 1; i < table_2.rows.length; i++) {
+                    table_2.rows[i].style.display = 'none';
+                };
+                
+            };
+
+            
+        };
+
+        // 檢查資料是否已存在
+        function checkExist(manufacturer, type) {
+            const table_2 = document.getElementById('table_2');
+            for (let i = 1; i < table_2.rows.length; i++) {
+                if (table_2.rows[i].cells[2].innerHTML === manufacturer && table_2.rows[i].cells[3].innerHTML === type) {
+                    return true;
+                };
+            };
+            return false;
+        };
+
+        // 清除輸入欄資訊
+        function clearInput() {
+            document.getElementById('txtbox_manufacturer').value = '';
+            document.getElementById('txtbox_type').value = '';
+            document.getElementById('txtbox_minPrice').value = '';
+            document.getElementById('txtbox_price').value = '';
+        };
+
+        // 刪除該列資訊
+        function deleteRow(button) {
+            let row = button.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+        };
+
+        // 序號重整
+        function refreshSerial() {
+            let table_2 = document.getElementById('table_2');
+            for (let i = 1; i < table_2.rows.length; i++) {
+                table_2.rows[i].cells[1].innerHTML = i;
+            };
+        };
+
+        // 帶入該列資訊
+        function showInfo(radio) {
+            let row = radio.parentNode.parentNode;
+            document.getElementById('txtbox_manufacturer').value = row.cells[2].innerText;
+            document.getElementById('txtbox_type').value = row.cells[3].innerText;
+            document.getElementById('txtbox_minPrice').value = row.cells[4].innerText;
+            document.getElementById('txtbox_price').value = row.cells[5].innerText;
+        };
+
+    </script>
+    <style>
+        .table {
+            border-collapse: collapse;
+            margin-bottom: 10px;
+        }
+
+        td {
+            text-align: center;
+            vertical-align: middle;
+            padding: 8px;
+        }
+
+        button {
+            display: inline-block;
+            margin: 0;
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+
+    </style>
+</head>
+<body>
+    <table class="table" id="table_1" border="1">
+        <tr>
+            <td>製造商</td>
+            <td><input type="text" id="txtbox_manufacturer"></td>
+            <td>類別</td>
+            <td><input type="text" id="txtbox_type"></td>
+        </tr>
+        <tr>
+            <td class="td">底價</td>
+            <td><input type="text" id="txtbox_minPrice"></td>
+            <td>售價</td>
+            <td><input type="text" id="txtbox_price"></td>            
+        </tr>
+        <tr>
+            <td colspan="4">
+                <button type="button" id="btn_insert">新增</button>
+                <button type="button" id="btn_update">修改</button>
+                <button type="button" id="btn_clear">清空</button>
+            </td>
+        </tr>
+    </table>
+    <table class="table" id="table_2" border="1">
+        <tr id="t2_header">
+            <td></td>
+            <td>序號</td>
+            <td>製造商</td>
+            <td>類別</td>
+            <td>底價</td>
+            <td>售價</td>
+            <td></td>
+        </tr>
+    </table>
+</body>
+</html>
