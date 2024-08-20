@@ -13,7 +13,7 @@
                 const type = document.getElementById('txtbox_type').value;
                 const minPrice = document.getElementById('txtbox_minPrice').value;
                 const price = document.getElementById('txtbox_price').value;
-                if (manufacturer === '' || type === '') {
+                if (!manufacturer.trim() || !type.trim()) {
                     alert('製造商、類別不可空白');
                     return;
                 } else if (checkExist(manufacturer, type)) {
@@ -57,7 +57,7 @@
                 deleteButton.type = 'button';
                 deleteButton.textContent = '刪除';
                 deleteButton.onclick = function() {
-                    deleteRow(this);
+                    deleteButtonRow(this);
                     refreshSerial();
                 };
                 cell6.appendChild(deleteButton);
@@ -93,8 +93,8 @@
             document.getElementById('btn_clear').onclick = function() {
                 clearInput();
                 let table_2 = document.getElementById('table_2');
-                for (let i = 1; i < table_2.rows.length; i++) {
-                    table_2.rows[i].style.display = 'none';
+                for (let i = table_2.rows.length - 1; i > 0; i--) {
+                    table_2.deleteRow(i);
                 };
                 
             };
@@ -122,7 +122,7 @@
         };
 
         // 刪除該列資訊
-        function deleteRow(button) {
+        function deleteButtonRow(button) {
             let row = button.parentNode.parentNode;
             row.parentNode.removeChild(row);
         };

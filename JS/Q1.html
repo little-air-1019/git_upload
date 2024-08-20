@@ -14,7 +14,7 @@
                 let key = document.getElementById('txtbox_key').value;
                 let value = document.getElementById('txtbox_value').value;
                 let result_str = '';
-                if (key === '') {
+                if (!key.trim()) {
                     alert('KEY值不可空白');
                     return;
                 } else if (map.contains(key)) {
@@ -27,13 +27,13 @@
                     result_str += key + '：' + map.get(key) + '<br>';
                 };
                 result.innerHTML = result_str;
-                result.hidden = false;
             };
 
             document.getElementById('btn_clear').onclick = function() {
                 document.getElementById('txtbox_key').value = '';
                 document.getElementById('txtbox_value').value = '';
-                result.hidden = true;
+                result.innerHTML = '';
+                map.clear();
             };
         };
     </script>
