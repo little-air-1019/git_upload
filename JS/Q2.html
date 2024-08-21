@@ -71,12 +71,17 @@
             document.getElementById('btn_update').onclick = function() {
                 const manufacturer = document.getElementById('txtbox_manufacturer').value;
                 const type = document.getElementById('txtbox_type').value;
+                const minPrice = document.getElementById('txtbox_minPrice').value;
+                const price = document.getElementById('txtbox_price').value;
                 let selected_radio = document.querySelector('input[name="select_row"]:checked');
                 if (selected_radio === null) {
                     alert('請選擇資料列');
                     return;
                 } else if (!manufacturer.trim() || !type.trim()) {
                     alert('製造商及類別不可為空白');
+                    return;
+                } else if (checkDuplicate(manufacturer, type, minPrice, price)) {
+                    alert('已有相同之資料');
                     return;
                 };
 
@@ -99,11 +104,22 @@
             
         };
 
-        // 檢查資料是否已存在
+        // 檢查資料是否已有同製造商及類別之資料
         function checkExist(manufacturer, type) {
             const table_2 = document.getElementById('table_2');
             for (let i = 1; i < table_2.rows.length; i++) {
                 if (table_2.rows[i].cells[2].innerHTML === manufacturer && table_2.rows[i].cells[3].innerHTML === type) {
+                    return true;
+                };
+            };
+            return false;
+        };
+
+        // 檢查資料是否已存在
+        function checkDuplicate(manufacturer, type, minPrice, price) {
+            const table_2 = document.getElementById('table_2');
+            for (let i = 1; i < table_2.rows.length; i++) {
+                if (table_2.rows[i].cells[2].innerHTML === manufacturer && table_2.rows[i].cells[3].innerHTML === type && table_2.rows[i].cells[4].innerHTML === minPrice && table_2.rows[i].cells[5].innerHTML === price) {
                     return true;
                 };
             };
