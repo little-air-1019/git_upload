@@ -1,0 +1,123 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>心理測驗看「減肥會成功or失敗」</title>
+
+    <script type="text/javascript" src="psychometricTestObject.js"></script>
+    <script type="text/javascript">
+        window.onload = function() {
+            document.getElementById('btn_1').addEventListener('click', function() {
+                const table = document.getElementById('content');
+                
+                const my_ans = document.querySelector('input[name="selection"]:checked');
+                if (!my_ans) {
+                    alert('請選擇一個選項');
+                    return;
+                }
+                              
+                const curr_q = table.rows[table.rows.length - 1].cells[0].innerHTML;
+                const radio_buttons = Array.from(my_ans.parentElement.querySelectorAll('input[name="selection"]'));
+                const next_q = psychometricTest[curr_q].next[radio_buttons.indexOf(my_ans)];
+
+                // 顯示結果
+                if (['Q9', 'Q10', 'Q11', 'Q12'].includes(curr_q)) {
+                    const result_title = result[next_q].title;
+                    const result_content = result[next_q].content;
+                    document.getElementById('resultDiv').innerHTML = '<b>' + next_q + result_title + '</b>' + '<br>' + result_content;
+                    disableBtn(table);
+                    return;
+                }
+
+                // 新增列
+                disableBtn(table);
+                const newRow = table.insertRow();
+                const cell0 = newRow.insertCell(0);
+                const cell1 = newRow.insertCell(1);
+                const cell2 = newRow.insertCell(2);
+                const cell3 = newRow.insertCell(3);
+
+                cell0.innerHTML = next_q;
+                cell1.innerHTML = psychometricTest[next_q].question;
+
+                for (let i = 0; i < psychometricTest[next_q].ans.length; i++) {
+                    const select = document.createElement('input');
+                    select.type = 'radio';
+                    select.name = 'selection';
+                    cell2.appendChild(select);
+                    const label = document.createElement('span');
+                    label.textContent = psychometricTest[next_q].ans[i];
+                    cell2.appendChild(label);
+                    cell2.appendChild(document.createElement('br'));
+                    select.parentElement.setAttribute('style', 'text-align: left;');
+                }
+
+                const next_btn = document.createElement('button');
+                next_btn.innerHTML = '下一題';
+                next_btn.addEventListener('click', function() {
+                    document.getElementById('btn_1').disabled = false;
+                    document.getElementById('btn_1').click();
+                    document.getElementById('btn_1').disabled = true;
+                });
+                cell3.appendChild(next_btn);
+                
+            });
+        };
+
+        function disableBtn(table) {
+            let curr_radio_btns = table.rows[table.rows.length - 1].cells[2].querySelectorAll('input[name="selection"]');
+            curr_radio_btns.forEach(btn => {
+                btn.disabled = true;
+            });
+
+            let curr_btn = table.rows[table.rows.length - 1].cells[3].getElementsByTagName('button')[0];
+            if (curr_btn) {
+                curr_btn.disabled = true;
+            }
+        };
+
+    </script>
+
+    <style>
+        table,
+        th,
+        td {
+            border: 1px solid #333;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>心理測驗看「減肥會成功or失敗」</h1>
+    <p>減重方式五花八門，你確定自己適合哪種減重方式嗎？</p>
+    <p>做個心理測驗試試看吧？</p>
+    <p>心理測驗來源： <a href="https://www.facebook.com/RDJIAHUEI/?locale=zh_TW">李佳蕙營養師</a></p>
+    <br>
+    <hr>
+    <table id="content">
+        <tr>
+            <td>題號</td>
+            <td>題目</td>
+            <td>選項</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Q1</td>
+            <td>處理眾多的事情，你會先處理困難的還是簡單的事情？</td>
+            <td style="text-align: left;">
+                <input type="radio" name="selection">困難的事情<br>
+                <input type="radio" name="selection">簡單的事情<br>
+                <input type="radio" name="selection">分配處理
+            </td>
+            <td>
+                <button type="button" id="btn_1">下一題</button>
+            </td>
+        </tr>
+    </table>
+    <br>
+    <div id="resultDiv"></div>
+
+</body>
+
+</html>
