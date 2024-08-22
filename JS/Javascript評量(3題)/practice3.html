@@ -9,15 +9,16 @@
         window.onload = function() {
             document.getElementById('btn_1').addEventListener('click', function() {
                 const table = document.getElementById('content');
-                
-                const my_ans = document.querySelector('input[name="selection"]:checked');
+                const curr_q = table.rows[table.rows.length - 1].cells[0].innerHTML;
+                const selection_name = 'selection' + curr_q;
+                const my_ans = document.querySelector(`input[name="${selection_name}"]:checked`);
                 if (!my_ans) {
                     alert('請選擇一個選項');
                     return;
                 }
                               
-                const curr_q = table.rows[table.rows.length - 1].cells[0].innerHTML;
-                const radio_buttons = Array.from(my_ans.parentElement.querySelectorAll('input[name="selection"]'));
+                
+                const radio_buttons = Array.from(my_ans.parentElement.querySelectorAll(`input[name="${selection_name}"]:checked`));
                 const next_q = psychometricTest[curr_q].next[radio_buttons.indexOf(my_ans)];
 
                 // 顯示結果
@@ -43,7 +44,7 @@
                 for (let i = 0; i < psychometricTest[next_q].ans.length; i++) {
                     const select = document.createElement('input');
                     select.type = 'radio';
-                    select.name = 'selection';
+                    select.name = 'selection' + next_q;
                     cell2.appendChild(select);
                     const label = document.createElement('span');
                     label.textContent = psychometricTest[next_q].ans[i];
@@ -65,7 +66,9 @@
         };
 
         function disableBtn(table) {
-            let curr_radio_btns = table.rows[table.rows.length - 1].cells[2].querySelectorAll('input[name="selection"]');
+            const curr_q = table.rows[table.rows.length - 1].cells[0].innerHTML;
+            const selection_name = 'selection' + curr_q;
+            let curr_radio_btns = table.rows[table.rows.length - 1].cells[2].querySelectorAll(`input[name="${selection_name}"]:checked`);
             curr_radio_btns.forEach(btn => {
                 btn.disabled = true;
             });
@@ -106,9 +109,9 @@
             <td>Q1</td>
             <td>處理眾多的事情，你會先處理困難的還是簡單的事情？</td>
             <td style="text-align: left;">
-                <input type="radio" name="selection">困難的事情<br>
-                <input type="radio" name="selection">簡單的事情<br>
-                <input type="radio" name="selection">分配處理
+                <input type="radio" name="selectionQ1">困難的事情<br>
+                <input type="radio" name="selectionQ1">簡單的事情<br>
+                <input type="radio" name="selectionQ1">分配處理
             </td>
             <td>
                 <button type="button" id="btn_1">下一題</button>
